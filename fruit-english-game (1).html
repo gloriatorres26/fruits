@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fruits & Veggies English 🍎🥕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --card: #16213e;
+      --accent: #e94560;
+      --accent2: #0f3460;
+      --green: #4ecca3;
+      --yellow: #ffd700;
+      --text: #eaeaea;
+      --pixel-border: 4px solid #000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Pixel font for titles */
+    .pixel {
+      font-family: 'Press Start 2P', cursive;
+      letter-spacing: 1px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h1 {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 #000;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 700px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: var(--pixel-border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 8px 8px 0 #000;
+      margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 14px 28px;
+      border: 3px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 4px 4px 0 #000;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--green);
+      color: #1a1a2e;
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: #1a1a2e;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* Fruit display */
+    .fruit-display {
+      font-size: 8rem;
+      text-align: center;
+      line-height: 1;
+      margin: 20px 0;
+      filter: drop-shadow(4px 4px 0 #000);
+      image-rendering: pixelated;
+    }
+
+    .fruit-name {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      text-align: center;
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 #000;
+      margin: 10px 0;
+    }
+
+    /* Options */
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .option-btn {
+      background: var(--accent2);
+      color: white;
+      padding: 16px;
+      font-size: 1.15rem;
+      border: 3px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 4px 4px 0 #000;
+      font-weight: 700;
+    }
+
+    .option-btn:hover {
+      background: #1a4a7a;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .option-btn.correct {
+      background: var(--green) !important;
+      color: #1a1a2e;
+    }
+
+    .option-btn.wrong {
+      background: var(--accent) !important;
+      color: white;
+    }
+
+    /* Progress & Score */
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .score-box, .progress-box {
+      background: rgba(0,0,0,0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 2px solid #000;
+    }
+
+    .score-value {
+      color: var(--yellow);
+    }
+
+    /* Feedback */
+    .feedback {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      min-height: 40px;
+      margin: 16px 0;
+    }
+
+    .feedback.correct {
+      color: var(--green);
+    }
+
+    .feedback.wrong {
+      color: var(--accent);
+    }
+
+    /* Input for spelling */
+    .spell-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 16px;
+      font-size: 1.4rem;
+      text-align: center;
+      border: 4px solid #000;
+      border-radius: 8px;
+      background: #0f3460;
+      color: white;
+      font-weight: 700;
+      margin: 16px auto;
+      display: block;
+      text-transform: lowercase;
+    }
+
+    .spell-input:focus {
+      outline: none;
+      border-color: var(--yellow);
+    }
+
+    /* Grid of fruits for learn mode */
+    .fruit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+    }
+
+    .fruit-card {
+      background: var(--accent2);
+      border: 3px solid #000;
+      border-radius: 10px;
+      padding: 16px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .fruit-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+      background: #1a4a7a;
+    }
+
+    .fruit-card .emoji {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .fruit-card .name {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--yellow);
+    }
+
+    /* End screen */
+    .final-score {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 2.5rem;
+      color: var(--yellow);
+      text-shadow: 4px 4px 0 #000;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 1.3rem;
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+      .fruit-display {
+        font-size: 6rem;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* Decorative pixels */
+    .pixel-deco {
+      position: fixed;
+      font-size: 2rem;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Victory animation */
+    .victory-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      color: var(--yellow);
+      text-shadow: 4px 4px 0 #000;
+      text-align: center;
+      margin: 10px 0 20px;
+      animation: victoryPop 0.8s ease-out, victoryGlow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes victoryPop {
+      0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+      60% { transform: scale(1.15) rotate(3deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes victoryGlow {
+      from { text-shadow: 4px 4px 0 #000, 0 0 10px #ffd700; }
+      to { text-shadow: 4px 4px 0 #000, 0 0 25px #ffd700, 0 0 40px #e94560; }
+    }
+
+    .review-list {
+      margin: 20px 0;
+      max-height: 260px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .review-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      border: 2px solid #000;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .review-item.correct {
+      background: rgba(78, 204, 163, 0.25);
+      border-color: var(--green);
+    }
+
+    .review-item.wrong {
+      background: rgba(233, 69, 96, 0.25);
+      border-color: var(--accent);
+    }
+
+    .review-item .emoji {
+      font-size: 1.8rem;
+    }
+
+    .review-item .status {
+      margin-left: auto;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative background -->
+  <div class="pixel-deco" style="top:10%; left:5%;">🍎</div>
+  <div class="pixel-deco" style="top:20%; right:8%;">🥕</div>
+  <div class="pixel-deco" style="bottom:15%; left:10%;">🍓</div>
+  <div class="pixel-deco" style="bottom:25%; right:5%;">🥦</div>
+  <div class="pixel-deco" style="top:50%; left:3%;">🌽</div>
+
+  <header>
+    <h1 class="pixel">🍎 Fruits & Veggies</h1>
+    <p class="subtitle">Learn fruit & vegetable names in English • Fun for beginners</p>
+  </header>
+
+  <!-- HOME SCREEN -->
+  <div id="home" class="screen active">
+    <div class="card">
+      <p class="message" style="margin-bottom: 24px;">
+        Welcome students! 🌟<br>
+        Practice the English names of fruits and vegetables.
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="startLearn()">📚 Learn Words</button>
+        <button class="btn btn-secondary" onclick="startQuiz()">❓ Quiz Mode</button>
+        <button class="btn btn-yellow" onclick="startSpell()">✍️ Spell Mode</button>
+      </div>
+    </div>
+    <p style="text-align:center; opacity:0.7; font-size:0.9rem; margin-top:12px;">
+      Perfect for classroom • Open on many devices at the same time
+    </p>
+  </div>
+
+  <!-- LEARN SCREEN -->
+  <div id="learn" class="screen">
+    <div class="card">
+      <div class="stats">
+        <div class="progress-box">Learn Mode</div>
+        <button class="btn" style="padding:8px 16px; font-size:0.9rem;" onclick="goHome()">🏠 Home</button>
+      </div>
+      <p class="message" style="font-size:1.1rem; margin-bottom:16px;">
+        Click any item to hear its name in English (say it out loud!)
+      </p>
+      <div class="fruit-grid" id="fruitGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz" class="screen">
+    <div class="card">
+      <div class="stats">
+        <div class="score-box">Score: <span class="score-value" id="quizScore">0</span></div>
+        <div class="progress-box"><span id="quizProgress">1</span> / 10</div>
+        <button class="btn" style="padding:8px 14px; font-size:0.85rem; background:#555; color:white;" onclick="goHome()">🏠 Menu</button>
+      </div>
+      <div class="fruit-display" id="quizFruit">🍎</div>
+      <div class="feedback" id="quizFeedback"></div>
+      <div class="options" id="quizOptions"></div>
+    </div>
+  </div>
+
+  <!-- SPELL SCREEN -->
+  <div id="spell" class="screen">
+    <div class="card">
+      <div class="stats">
+        <div class="score-box">Score: <span class="score-value" id="spellScore">0</span></div>
+        <div class="progress-box"><span id="spellProgress">1</span> / 8</div>
+        <button class="btn" style="padding:8px 14px; font-size:0.85rem; background:#555; color:white;" onclick="goHome()">🏠 Menu</button>
+      </div>
+      <div class="fruit-display" id="spellFruit">🍌</div>
+      <p class="message" style="font-size:1.1rem;">Type the English name of this item:</p>
+      <input type="text" class="spell-input" id="spellInput" placeholder="type here..." autocomplete="off" spellcheck="false">
+      <div class="feedback" id="spellFeedback"></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="checkSpell()">Check ✓</button>
+        <button class="btn" style="background:#555; color:white;" onclick="skipSpell()">Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result" class="screen">
+    <div class="card">
+      <div class="victory-title" id="victoryTitle">VICTORY!</div>
+      <div class="final-score" id="finalScore">0</div>
+      <p class="message" id="finalMessage"></p>
+      <div class="review-list" id="reviewList"></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="goHome()">🏠 Menu</button>
+        <button class="btn btn-secondary" id="playAgainBtn">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== DATA ==========
+    // Fruits (common) + Vegetables – only widely supported emojis
+    const items = [
+      // Fruits
+      { emoji: "🍎", name: "apple",       type: "fruit",     spanish: "manzana" },
+      { emoji: "🍌", name: "banana",      type: "fruit",     spanish: "plátano / banano" },
+      { emoji: "🍊", name: "orange",      type: "fruit",     spanish: "naranja" },
+      { emoji: "🍇", name: "grapes",      type: "fruit",     spanish: "uvas" },
+      { emoji: "🍓", name: "strawberry",  type: "fruit",     spanish: "fresa" },
+      { emoji: "🍉", name: "watermelon",  type: "fruit",     spanish: "sandía" },
+      { emoji: "🍍", name: "pineapple",   type: "fruit",     spanish: "piña" },
+      { emoji: "🍋", name: "lemon",       type: "fruit",     spanish: "limón" },
+      { emoji: "🍒", name: "cherry",      type: "fruit",     spanish: "cereza" },
+      // Vegetables
+      { emoji: "🥕", name: "carrot",      type: "vegetable", spanish: "zanahoria" },
+      { emoji: "🥦", name: "broccoli",    type: "vegetable", spanish: "brócoli" },
+      { emoji: "🌽", name: "corn",        type: "vegetable", spanish: "maíz" },
+      { emoji: "🍅", name: "tomato",      type: "vegetable", spanish: "tomate" },
+      { emoji: "🥒", name: "cucumber",    type: "vegetable", spanish: "pepino" },
+      { emoji: "🥔", name: "potato",      type: "vegetable", spanish: "papa / patata" },
+      { emoji: "🧅", name: "onion",       type: "vegetable", spanish: "cebolla" },
+      { emoji: "🥬", name: "lettuce",     type: "vegetable", spanish: "lechuga" },
+      { emoji: "🌶️", name: "pepper",      type: "vegetable", spanish: "pimentón / chile" }
+    ];
+
+    // ========== STATE ==========
+    let currentMode = null;
+    let score = 0;
+    let questionIndex = 0;
+    let questions = [];
+    let currentItem = null;
+    let answerHistory = []; // tracks correct/wrong for review
+
+    // Helper: speak English word
+    function speak(word) {
+      if ('speechSynthesis' in window) {
+        speechSynthesis.cancel(); // stop previous
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = 'en-US';
+        utter.rate = 0.85;
+        speechSynthesis.speak(utter);
+      }
+    }
+
+    // ========== NAVIGATION ==========
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goHome() {
+      showScreen('home');
+    }
+
+    // ========== LEARN MODE ==========
+    function startLearn() {
+      const grid = document.getElementById('fruitGrid');
+      grid.innerHTML = '';
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'fruit-card';
+        card.innerHTML = `
+          <span class="emoji">${item.emoji}</span>
+          <span class="name">${item.name}</span>
+        `;
+        card.onclick = () => {
+          speak(item.name);
+          // Visual feedback
+          card.style.background = '#4ecca3';
+          card.style.color = '#1a1a2e';
+          setTimeout(() => {
+            card.style.background = '';
+            card.style.color = '';
+          }, 600);
+        };
+        grid.appendChild(card);
+      });
+      showScreen('learn');
+    }
+
+    // ========== QUIZ MODE ==========
+    function startQuiz() {
+      currentMode = 'quiz';
+      score = 0;
+      questionIndex = 0;
+      answerHistory = [];
+      questions = shuffle([...items]).slice(0, 10);
+      document.getElementById('quizScore').textContent = '0';
+      showScreen('quiz');
+      nextQuizQuestion();
+    }
+
+    function nextQuizQuestion() {
+      if (questionIndex >= questions.length) {
+        showResult();
+        return;
+      }
+
+      currentItem = questions[questionIndex];
+      document.getElementById('quizFruit').textContent = currentItem.emoji;
+      document.getElementById('quizProgress').textContent = questionIndex + 1;
+      document.getElementById('quizFeedback').textContent = '';
+      document.getElementById('quizFeedback').className = 'feedback';
+
+      // Create options: 1 correct + 3 random wrong
+      let options = [currentItem.name];
+      const others = items.filter(i => i.name !== currentItem.name);
+      shuffle(others).slice(0, 3).forEach(i => options.push(i.name));
+      options = shuffle(options);
+
+      const container = document.getElementById('quizOptions');
+      container.innerHTML = '';
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectQuizOption(btn, opt);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectQuizOption(btn, selected) {
+      // Pronounce the word the student selected
+      speak(selected);
+
+      // Disable all buttons
+      document.querySelectorAll('#quizOptions .option-btn').forEach(b => {
+        b.style.pointerEvents = 'none';
+        if (b.textContent === currentItem.name) {
+          b.classList.add('correct');
+        }
+      });
+
+      const isCorrect = selected === currentItem.name;
+      const feedback = document.getElementById('quizFeedback');
+
+      // Save for review
+      answerHistory.push({
+        item: currentItem,
+        selected: selected,
+        correct: isCorrect
+      });
+
+      if (isCorrect) {
+        score += 10;
+        document.getElementById('quizScore').textContent = score;
+        feedback.textContent = '✅ Correct! Great job!';
+        feedback.className = 'feedback correct';
+        btn.classList.add('correct');
+      } else {
+        feedback.textContent = `❌ It's "${currentItem.name}"`;
+        feedback.className = 'feedback wrong';
+        btn.classList.add('wrong');
+      }
+
+      questionIndex++;
+      setTimeout(nextQuizQuestion, 1600);
+    }
+
+    // ========== SPELL MODE ==========
+    function startSpell() {
+      currentMode = 'spell';
+      score = 0;
+      questionIndex = 0;
+      answerHistory = [];
+      questions = shuffle([...items]).slice(0, 8);
+      document.getElementById('spellScore').textContent = '0';
+      document.getElementById('spellInput').value = '';
+      showScreen('spell');
+      nextSpellQuestion();
+    }
+
+    function nextSpellQuestion() {
+      if (questionIndex >= questions.length) {
+        showResult();
+        return;
+      }
+
+      currentItem = questions[questionIndex];
+      document.getElementById('spellFruit').textContent = currentItem.emoji;
+      document.getElementById('spellProgress').textContent = questionIndex + 1;
+      document.getElementById('spellFeedback').textContent = '';
+      document.getElementById('spellFeedback').className = 'feedback';
+      document.getElementById('spellInput').value = '';
+      document.getElementById('spellInput').focus();
+    }
+
+    function checkSpell() {
+      const input = document.getElementById('spellInput');
+      const answer = input.value.trim().toLowerCase();
+      const feedback = document.getElementById('spellFeedback');
+
+      if (!answer) return;
+
+      if (answer === currentItem.name) {
+        score += 10;
+        document.getElementById('spellScore').textContent = score;
+        feedback.textContent = '✅ Perfect!';
+        feedback.className = 'feedback correct';
+        answerHistory.push({ item: currentItem, selected: answer, correct: true });
+        speak(currentItem.name);
+        questionIndex++;
+        setTimeout(nextSpellQuestion, 1200);
+      } else {
+        feedback.textContent = `❌ Try again! (Hint: starts with "${currentItem.name[0]}")`;
+        feedback.className = 'feedback wrong';
+        input.select();
+      }
+    }
+
+    function skipSpell() {
+      const feedback = document.getElementById('spellFeedback');
+      feedback.textContent = `It was "${currentItem.name}"`;
+      feedback.className = 'feedback wrong';
+      answerHistory.push({ item: currentItem, selected: '(skipped)', correct: false });
+      questionIndex++;
+      setTimeout(nextSpellQuestion, 1400);
+    }
+
+    // Enter key for spell
+    document.getElementById('spellInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkSpell();
+    });
+
+    // ========== RESULT ==========
+    function showResult() {
+      const max = currentMode === 'quiz' ? 100 : 80;
+      const percentage = Math.round((score / max) * 100);
+
+      // Victory title changes based on performance
+      const victoryEl = document.getElementById('victoryTitle');
+      if (percentage >= 80) {
+        victoryEl.textContent = 'VICTORY!';
+      } else if (percentage >= 50) {
+        victoryEl.textContent = 'GOOD JOB!';
+      } else {
+        victoryEl.textContent = 'KEEP GOING!';
+      }
+
+      document.getElementById('finalScore').textContent = score + ' pts';
+
+      let msg = '';
+      if (percentage >= 90) msg = '🌟 Amazing! You are a Food Master!';
+      else if (percentage >= 70) msg = '🎉 Very good! Keep practicing!';
+      else if (percentage >= 50) msg = '👍 Nice work! You are learning fast!';
+      else msg = '💪 Good start! Play again to improve!';
+      document.getElementById('finalMessage').textContent = msg;
+
+      // Build review list
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = '';
+
+      if (answerHistory.length > 0) {
+        answerHistory.forEach(entry => {
+          const div = document.createElement('div');
+          div.className = 'review-item ' + (entry.correct ? 'correct' : 'wrong');
+          div.innerHTML = `
+            <span class="emoji">${entry.item.emoji}</span>
+            <span>
+              <strong>${entry.item.name}</strong>
+              ${!entry.correct ? `<br><small style="opacity:0.85">You said: ${entry.selected}</small>` : ''}
+            </span>
+            <span class="status">${entry.correct ? '✅' : '❌'}</span>
+          `;
+          reviewList.appendChild(div);
+        });
+      }
+
+      document.getElementById('playAgainBtn').onclick = currentMode === 'quiz' ? startQuiz : startSpell;
+      showScreen('result');
+    }
+
+    // ========== UTILS ==========
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+  </script>
+</body>
+</html>
